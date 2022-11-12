@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	inter "pingmatrix/interface"
+	inter "pingmatrix/rpc_interface"
 )
 
 func uploadHostInfo(hostInfo inter.HostInfo) {

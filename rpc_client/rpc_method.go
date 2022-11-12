@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/rpc"
 	"net/rpc/jsonrpc"
-	inter "pingmatrix/interface"
+	inter "pingmatrix/rpc_interface"
 )
 
 type rpcConn struct {
