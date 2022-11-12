@@ -4,7 +4,7 @@ import (
 	"github.com/urfave/cli/v2"
 	"log"
 	"os"
-	inter "pingmatrix/interface"
+	inter "pingmatrix/rpc_interface"
 	"pingmatrix/tools"
 	"sort"
 	"time"

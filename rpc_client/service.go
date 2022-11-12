@@ -5,7 +5,7 @@ import (
 	"log"
 	"math"
 	"os/exec"
-	inter "pingmatrix/interface"
+	inter "pingmatrix/rpc_interface"
 	"regexp"
 	"strconv"
 	"strings"
