@@ -12,6 +12,8 @@ import (
 	"time"
 )
 
+const timeout = 3600
+
 func delSliceItemByIndex(index int, slice []string) []string {
 	slice = append(slice[:index], slice[index+1:]...)
 	return slice
@@ -38,16 +40,31 @@ func fPing(ip, args string, hostAddr ...string) []inter.FPingInfo {
 	if err != nil {
 		log.Printf("fping execute error are: %#v\n", err.Error())
 	}
-	re := regexp.MustCompile(`(.*) +: xmt/rcv/%loss = (.*), min/avg/max = (.*)`) //正则过滤下丢包率为100%的
+	re := regexp.MustCompile(`(.*) +: xmt/rcv/%loss = (.*?)/(.*?)/(.*%)(, min/avg/max = (.*?)/(.*?)/(.*))?`)
 	regexpMatch := re.FindAllStringSubmatch(string(output), -1)
 	for _, element := range regexpMatch {
 		fPingInfo.Src = ip
 		fPingInfo.Tss = time.Now().Unix()
 		fPingInfo.Dst = element[1]
-		fPingInfo.Loss = strings.Split(element[2], "/")[2]
-		fPingInfo.Min, _ = strconv.ParseFloat(strings.Split(element[3], "/")[0], 64)
-		fPingInfo.Avg, _ = strconv.ParseFloat(strings.Split(element[3], "/")[1], 64)
-		fPingInfo.Max, _ = strconv.ParseFloat(strings.Split(element[3], "/")[2], 64)
+		fPingInfo.Loss = element[4]
+
+		if fPingInfo.Max, err = strconv.ParseFloat(element[8], 64); err != nil {
+			fPingInfo.Max = timeout
+		}
+		if fPingInfo.Avg, err = strconv.ParseFloat(element[7], 64); err != nil {
+			fPingInfo.Avg = timeout
+		}
+		if fPingInfo.Min, err = strconv.ParseFloat(element[6], 64); err != nil {
+			fPingInfo.Min = timeout
+		}
+
+		//fPingInfo.Src = ip
+		//fPingInfo.Tss = time.Now().Unix()
+		//fPingInfo.Dst = element[1]
+		//fPingInfo.Loss = strings.Split(element[2], "/")[2]
+		//fPingInfo.Min, _ = strconv.ParseFloat(strings.Split(element[3], "/")[0], 64)
+		//fPingInfo.Avg, _ = strconv.ParseFloat(strings.Split(element[3], "/")[1], 64)
+		//fPingInfo.Max, _ = strconv.ParseFloat(strings.Split(element[3], "/")[2], 64)
 		fPingInfoArr = append(fPingInfoArr, *fPingInfo)
 	}
 	log.Printf("fping results are %#v\n", fPingInfoArr)
