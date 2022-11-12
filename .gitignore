@@ -2,3 +2,4 @@
 /rpc_server/rpc_server
 /.DS_Store
 /.idea
+/dist/*
