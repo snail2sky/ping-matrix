@@ -1,9 +1,25 @@
 package main
 
 import (
+	"io/ioutil"
 	"log"
 	inter "pingmatrix/rpc_interface"
 )
+
+func initDBTable() {
+	log.Println("DB: Init DB table")
+	sqlBytes, err := ioutil.ReadFile("./initDB.sql")
+	if err != nil {
+		log.Fatalln("Read sql file error", err.Error())
+	}
+	sqlTable := string(sqlBytes)
+	log.Println("DB: execute sql:", sqlTable)
+	_, err = db.Exec(sqlTable)
+	if err != nil {
+		log.Fatalln("DB: init DB table error", err.Error())
+	}
+	log.Println("DB: execute sql success")
+}
 
 func uploadHostInfo(hostInfo inter.HostInfo) {
 	log.Printf("DB: uploadHostInfo insert %#v\n", hostInfo)
