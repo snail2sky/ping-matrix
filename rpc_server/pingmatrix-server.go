@@ -16,21 +16,28 @@ import (
 var authors = make([]*cli.Author, 0)
 
 type arg struct {
+	initDB                                  bool
 	rpcAddr, dbAddr, db, username, password string
 }
 
 var db *sql.DB
 
 func ServeForever(a arg) {
+	dbInfo := strings.Split(a.dbAddr, ":")
+	dbHost, dbPort := dbInfo[0], dbInfo[1]
+	db = tools.NewDBConnector(a.username, a.password, dbHost, dbPort, a.db)
+	defer db.Close()
+	if a.initDB {
+		initDBTable()
+		return
+	}
+
 	//rpc注册 service
 	err := rpc.Register(new(PingMatrix))
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
-	dbInfo := strings.Split(a.dbAddr, ":")
-	dbHost, dbPort := dbInfo[0], dbInfo[1]
-	db = tools.NewDBConnector(a.username, a.password, dbHost, dbPort, a.db)
-	defer db.Close()
+
 	server, err := net.Listen("tcp", a.rpcAddr)
 	if err != nil {
 		log.Fatalln(err.Error())
@@ -86,9 +93,15 @@ func main() {
 				Aliases: []string{"p"},
 				Usage:   "connect database password",
 			},
+			&cli.BoolFlag{
+				Name:    "init-db",
+				Aliases: []string{"i"},
+				Usage:   "init database",
+			},
 		},
 		Action: func(c *cli.Context) error {
 			a := arg{
+				c.Bool("init-db"),
 				c.String("listen"),
 				c.String("db-host"),
 				c.String("db-name"),
