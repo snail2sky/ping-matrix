@@ -8,3 +8,5 @@
 - run
   - ./rpc_server --help
   - ./rpc_client --help
+- build
+  - ./build.sh will get all platform binary file and generate in dist directory.

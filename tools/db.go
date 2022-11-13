@@ -12,7 +12,7 @@ type DBConnector struct {
 }
 
 func NewDBConnector(username, password, host, port, db string) *sql.DB {
-	url := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", username, password, host, port, db)
+	url := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&multiStatements=true", username, password, host, port, db)
 	connectedDB, err := sql.Open("mysql", url)
 	if err != nil {
 		log.Fatalf("DB connect failed %s, db info %s\n", err, url)
