@@ -58,13 +58,6 @@ func fPing(ip, args string, hostAddr ...string) []inter.FPingInfo {
 			fPingInfo.Min = timeout
 		}
 
-		//fPingInfo.Src = ip
-		//fPingInfo.Tss = time.Now().Unix()
-		//fPingInfo.Dst = element[1]
-		//fPingInfo.Loss = strings.Split(element[2], "/")[2]
-		//fPingInfo.Min, _ = strconv.ParseFloat(strings.Split(element[3], "/")[0], 64)
-		//fPingInfo.Avg, _ = strconv.ParseFloat(strings.Split(element[3], "/")[1], 64)
-		//fPingInfo.Max, _ = strconv.ParseFloat(strings.Split(element[3], "/")[2], 64)
 		fPingInfoArr = append(fPingInfoArr, *fPingInfo)
 	}
 	log.Printf("fping results are %#v\n", fPingInfoArr)

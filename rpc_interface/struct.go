@@ -6,7 +6,8 @@ type HostInfo struct {
 	Comment string
 }
 
-// FPingInfo 单个FPing的结果
+// FPingInfo 单个FPing的结果，
+// 存到数据库的数据，需要在数据库的表里创建好这些字段
 type FPingInfo struct {
 	Tss            int64
 	Avg, Min, Max  float64
